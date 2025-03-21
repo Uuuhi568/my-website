@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作文音频播放</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <h2>作文音频播放</h2>
+    <button onclick="startPlayback()">播放</button>
+    <button onclick="playPrevious()">上一首</button>
+    <button onclick="playNextManual()">下一首</button>
+    <p id="currentTrackInfo">当前播放：无</p>
+
+    <script>
+        // 音频播放列表（换成你的音频文件地址）
+        const playlist = [
+            "https://www.dropbox.com/scl/fi/wag0talihb3tnqamnqw5h/audio1.mp3?rlkey=zc3nh01jbp5moiy7acg4t72br&st=war3vwae&raw=1",
+        ];
+
+        let currentTrack = 0;
+        let sound = null;
+
+        function loadTrack(trackIndex) {
+            if (trackIndex >= 0 && trackIndex < playlist.length) {
+                if (sound) sound.stop(); // 停止当前播放
+                sound = new Howl({
+                    src: [playlist[trackIndex]],
+                    html5: true,
+                    onend: playNext // 播放完自动下一首
+                });
+                updateTrackInfo(trackIndex);
+                sound.play();
+            }
+        }
+
+        function startPlayback() {
+            loadTrack(currentTrack);
+        }
+
+        function playNext() {
+            if (currentTrack < playlist.length - 1) {
+                currentTrack++;
+                loadTrack(currentTrack);
+            }
+        }
+
+        function playPrevious() {
+            if (currentTrack > 0) {
+                currentTrack--;
+                loadTrack(currentTrack);
+            }
+        }
+
+        function playNextManual() {
+            if (currentTrack < playlist.length - 1) {
+                currentTrack++;
+                loadTrack(currentTrack);
+            }
+        }
+
+        function updateTrackInfo(index) {
+            document.getElementById("currentTrackInfo").innerText = "当前播放：" + playlist[index];
+        }
+    </script>
+
+</body>
+</html>
